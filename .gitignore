@@ -1,3 +1,4 @@
 .vagrant/
+playbooks/*.retry
 features/support/env.rb
 steps.txt
