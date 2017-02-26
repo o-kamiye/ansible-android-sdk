@@ -1,1 +1,3 @@
 .vagrant/
+features/support/env.rb
+steps.txt

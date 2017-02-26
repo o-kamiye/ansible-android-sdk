@@ -1,0 +1,3 @@
+# Configurable variables for all playbooks
+hosts: all
+user: vagrant
