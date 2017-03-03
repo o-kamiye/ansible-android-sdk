@@ -1,8 +1,4 @@
 ---
-- name: Add Java apt repository
-  apt_repository:
-    repo: 'ppa:webupd8team/java'
-
 - name: Update apt cache
   apt: update_cache=yes
 
@@ -11,11 +7,12 @@
 
 - name: Install Java (>=7)
   apt: name="{{ item }}" state=latest
-    with_items:
-      - oracle-java8-installer
-      - git
-      - lib32stdc++6
-      - lib32z1
+  with_items:
+    - default-jre
+    - default-jdk
+    - git
+    - lib32stdc++6
+    - lib32z1
 
 
   

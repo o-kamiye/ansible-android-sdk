@@ -13,6 +13,10 @@ end
 
 # Dependencies scenario
 When(/^I install dependencies \(e\.g\. Java, Git, etc\)$/) do
-  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/common.yml"
+  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/common.yml -vvv"
   output, error, @status = Open3.capture3 "#{command}"
+end
+
+Then(/^it should be successful$/) do
+  expect(@status.success?).to eq(true)
 end
