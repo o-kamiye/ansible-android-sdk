@@ -1,33 +1,56 @@
 ---
+- name: Check config directory for Android SDK artifacts
+  command: bash -c "ls {{ sdk_directory }} | grep {{ android_home_directory }}"
+  register: android_home_exists
+  ignore_errors: True
+  tags:
+    - sdk_download
+    - sdk_update
+
+- name: Check for platform directory inside ANDROID HOME directory
+  command: bash -c "ls {{ sdk_directory }}{{ android_home_directory }} | grep platform"
+  register: platform_found
+  when: android_home_exists|success
+  ignore_errors: True
+  tags:
+    - sdk_download
+    - sdk_update
+
+- name: Create ANDROID HOME directory
+  file: path={{ sdk_directory }}{{ android_home_directory }} state=directory mode=0777
+  when: android_home_exists|failed
+  tags:
+    - sdk_download
+
 - name: Download Android SDK Tools
   get_url: url=https://dl.google.com/android/repository/tools_r{{ sdk_tools_version }}-linux.zip dest={{ sdk_directory }}
+  when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_download
 
 - name: Unarchive Android SDK Tools
   unarchive: src={{ sdk_directory }}tools_r{{ sdk_tools_version }}-linux.zip dest={{ sdk_directory }} copy=no
+  when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_download
 
 - name: Verify that SDK Tools have been downloaded
-  command: bash -c "ls /opt | grep tools"
+  command: bash -c "ls {{ sdk_directory }} | grep tools"
+  when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_download
-
-- name: Create ANDROID HOME directory
-  file: path={{ sdk_directory }}{{ android_home_directory }} state=directory mode=0777
-  tags:
-    - sdk_update
 
 - name: Download packages and move them to ANDROID HOME directory
   command: bash -c "{{ item }}" chdir={{ sdk_directory }}tools
   with_items:
     - echo y | ./android update sdk --no-ui --filter platform,platform-tools
     - mv {{ sdk_directory }}platforms/ {{ sdk_directory }}platform-tools/ {{ sdk_directory }}{{ android_home_directory }}
+  when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_update
 
 - name: Move tools directory into ANDROID HOME directory as well
   command: bash -c "mv tools/ {{ sdk_directory }}{{ android_home_directory }}" chdir={{ sdk_directory }}
+  when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_update

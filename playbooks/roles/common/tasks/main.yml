@@ -42,20 +42,20 @@
   tags:
     - common
 
-- name: Check if Boto is installed
-  command: python -c "import pexpect; print pexpect.Version" | grep -Eo '[0-9.]{1,}'
-  register: pexpect_installed
+- name: Check if Pexpect is installed
+  command: bash -c "pip list --format legacy | grep pexpect | grep -Eo '[0-9.]{1,}'"
+  register: pexpect_version
   ignore_errors: True
   tags:
     - common
 
-- debug: var=pexpect_installed
+- debug: var=pexpect_version
   tags:
     - common
 
 - name: Install Pexpect
   pip: name=pexpect state=latest
-  when: pexpect_installed|failed
+  when: pexpect_version.stdout < '3.3'
   tags:
     - common
 
