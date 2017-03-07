@@ -1,9 +1,63 @@
 ---
 - name: Update apt cache
   apt: update_cache=yes
+  tags:
+    - common
 
 - name: Upgrade OS
   apt: upgrade=dist force=yes
+  tags:
+    - common
+
+- name: Check if python is installed
+  command: bash -c "python --version 2>&1 | awk '{print $2}'"
+  register: python_version
+  tags:
+    - common
+
+- name: Install minimum required python version if not present
+  apt: name=python2.7 state=present
+  when: python_version.stdout < '2.6.5'
+  tags:
+    - common
+
+- name: Check if pip is installed
+  command: bash -c "pip --version | grep pip"
+  register: pip_version
+  ignore_errors: True
+  tags:
+    - common
+
+- name: Download pip if not present
+  get_url: url=https://bootstrap.pypa.io/get-pip.py dest={{ ansible_env.PWD }}
+  when: pip_version|failed
+  tags:
+    - common
+
+- name: Install downloaded pip file
+  command: python get-pip.py
+  args:
+    chdir: "{{ ansible_env.PWD}}"
+  when: pip_version|failed
+  tags:
+    - common
+
+- name: Check if Boto is installed
+  command: python -c "import pexpect; print pexpect.Version" | grep -Eo '[0-9.]{1,}'
+  register: pexpect_installed
+  ignore_errors: True
+  tags:
+    - common
+
+- debug: var=pexpect_installed
+  tags:
+    - common
+
+- name: Install Pexpect
+  pip: name=pexpect state=latest
+  when: pexpect_installed|failed
+  tags:
+    - common
 
 - name: Install Java (>=7)
   apt: name="{{ item }}" state=latest
@@ -13,6 +67,9 @@
     - git
     - lib32stdc++6
     - lib32z1
+    - unzip
+  tags:
+    - common
 
 
   

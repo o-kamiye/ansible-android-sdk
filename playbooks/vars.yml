@@ -1,3 +1,9 @@
 # Configurable variables for all playbooks
 hosts: vagrant
 user: vagrant
+
+# Configuration for Android SDK
+sdk_tools_version: 25.2.3
+sdk_directory: /opt/
+
+android_home_directory: android-sdk-linux

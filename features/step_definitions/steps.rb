@@ -20,3 +20,15 @@ end
 Then(/^it should be successful$/) do
   expect(@status.success?).to eq(true)
 end
+
+When(/^I download Android build tools$/) do
+  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/sdk.yml --tags 'sdk_download' -vvv"
+  output, error, status = Open3.capture3 "#{command}"
+
+  expect(status.success?).to eq(true)
+end
+
+When(/^I update sdk from downloaded tools$/) do
+  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/sdk.yml --tags 'sdk_update' -vvv"
+  output, error, @status = Open3.capture3 "#{command}"
+end
