@@ -23,34 +23,31 @@
     - sdk_download
 
 - name: Download Android SDK Tools
-  get_url: url=https://dl.google.com/android/repository/tools_r{{ sdk_tools_version }}-linux.zip dest={{ sdk_directory }}
+  get_url: url=https://dl.google.com/android/repository/tools_r{{ sdk_tools_version }}-linux.zip dest={{ android_home_directory }}
   when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_download
 
 - name: Unarchive Android SDK Tools
-  unarchive: src={{ sdk_directory }}/tools_r{{ sdk_tools_version }}-linux.zip dest={{ sdk_directory }} copy=no
+  unarchive: src={{ android_home_directory }}/tools_r{{ sdk_tools_version }}-linux.zip dest={{ android_home_directory }} copy=no
   when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_download
 
 - name: Verify that SDK Tools have been downloaded
-  command: bash -c "ls {{ sdk_directory }} | grep tools"
+  command: bash -c "ls {{ android_home_directory }} | grep tools"
   when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_download
 
 - name: Download packages and move them to ANDROID HOME directory
-  command: bash -c "{{ item }}" chdir={{ sdk_directory }}/tools
-  with_items:
-    - echo y | ./android update sdk --no-ui --filter platform,platform-tools
-    - mv {{ sdk_directory }}/platforms/ {{ sdk_directory }}/platform-tools/ {{ android_home_directory }}
+  command: bash -c "echo y | ./android update sdk --no-ui --filter platform,platform-tools" chdir={{ android_home_directory }}/tools
   when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_update
 
-- name: Move tools directory into ANDROID HOME directory as well
-  command: bash -c "mv tools/ {{ android_home_directory }}" chdir={{ sdk_directory }}
+- name: Delete downloaded tools archive
+  file: path={{ android_home_directory }}/*linux.zip state=absent
   when: android_home_exists|failed or platform_found|failed
   tags:
     - sdk_update

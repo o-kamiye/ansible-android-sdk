@@ -1,4 +1,9 @@
 ---
+- name: Add webupd8 ppa
+  apt_repository: repo='ppa:webupd8team/java'
+  tags:
+    - common
+
 - name: Update apt cache
   apt: update_cache=yes
   tags:
@@ -59,15 +64,23 @@
   tags:
     - common
 
-- name: Install Java (>=7)
+- name: Install Dependencies
   apt: name="{{ item }}" state=latest
   with_items:
-    - default-jre
-    - default-jdk
     - git
     - lib32stdc++6
     - lib32z1
     - unzip
+  tags:
+    - common
+
+- name: Auto accept oracle jdk license
+  command: bash -c "echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections"
+  tags:
+    - common
+
+- name: Install java8
+  command: bash -c "apt-get install -y oracle-java8-installer ca-certificates"
   tags:
     - common
 

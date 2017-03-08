@@ -39,3 +39,9 @@ When(/^I configure Android environment$/) do
   command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/sdk.yml --tags 'sdk_configure' -vvv"
   output, error, @status = Open3.capture3 "#{command}"
 end
+
+# Configure AVD
+When(/^I create AVD$/) do
+  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/avd.yml -vvv"
+  output, error, @status = Open3.capture3 "#{command}"
+end
