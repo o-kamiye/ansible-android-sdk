@@ -7,3 +7,11 @@ sdk_tools_version: 25.2.3
 
 android_home_directory: /opt/android-sdk-linux
 build_tools_version: 25.0.2
+
+# Option to create AVD. Please set to false in subsequent executions
+create_avd: true
+avd_name: android19
+avd_android_version: android-19
+
+# Note that there's currently only support for armeabi-v7a
+# So make sure the avd version has an ABI for armeabi-v7a

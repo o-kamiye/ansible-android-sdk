@@ -1,11 +1,13 @@
 ---
 - name: Install system images
-  command: bash -c "echo y | ./sdkmanager 'system-images;android-19;default;armeabi-v7a'" chdir={{ android_home_directory }}/tools/bin
+  command: bash -c "echo y | ./sdkmanager 'system-images;{{ avd_android_version }};default;armeabi-v7a'" chdir={{ android_home_directory }}/tools/bin
+  when: create_avd
   tags:
     - avd_configure
 
 - name: Create AVD
-  command: bash -c "echo no | ./android create avd --force -n android19 -t android-19 --abi armeabi-v7a" chdir={{ android_home_directory }}/tools
+  command: bash -c "echo no | ./android create avd --force -n {{ avd_name }} -t {{ avd_android_version }} --abi armeabi-v7a" chdir={{ android_home_directory }}/tools
+  when: create_avd
   tags:
     - avd_configure
 
