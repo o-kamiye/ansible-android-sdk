@@ -4,6 +4,7 @@ user: vagrant
 
 # Configuration for Android SDK
 sdk_tools_version: 25.2.3
-sdk_directory: /opt/
+sdk_directory: /opt
 
-android_home_directory: android-sdk-linux
+android_home_directory: /opt/android-sdk-linux
+build_tools_version: 25.0.2
