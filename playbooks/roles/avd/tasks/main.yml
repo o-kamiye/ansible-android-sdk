@@ -1,18 +1,24 @@
 ---
-- name: Update SDK with Google API ABI
-  command: bash -c "echo y | ./android update sdk -u -a -t {{ avd_android_version }},{{ google_api_system_image }}"
+- name: Check if AVD exists
+  command: bash -c "./android list avd | grep {{ avd_name }}" chdir={{ android_home_directory }}/tools
+  register: avd_exists
+  ignore_errors: True
   when: create_avd
   tags:
     - avd_configure
 
-- name: Create AVD
-  command: bash -c "echo no | ./android create avd --force -n {{ avd_name }} -t {{ avd_android_version }} --abi armeabi-v7a" chdir={{ android_home_directory }}/tools
-  when: create_avd
+- name: Update SDK with Google API ABI
+  command: bash -c "{{ item }}" chdir={{ android_home_directory }}/tools
+  with_items:
+    - echo y | ./android update sdk -u -a -t {{ avd_android_version }},{{ google_api_system_image }}
+    - echo no | ./android create avd --force -n {{ avd_name }} -t {{ avd_android_version }} --abi {{ abi_version }}
+  when: create_avd and avd_exists|failed
   tags:
     - avd_configure
 
 - name: Check that created avd is shown in list of devices
-  command: bash -c "./android list avd | grep {{ avd_name }}"
+  command: bash -c "./android list avd | grep {{ avd_name }}" chdir={{ android_home_directory }}/tools
+  when: create_avd
   tags:
     - avd_verify
 

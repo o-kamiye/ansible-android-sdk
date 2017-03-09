@@ -1,4 +1,5 @@
 .vagrant/
 playbooks/*.retry
+playbooks/hosts.ini
 features/support/env.rb
 steps.txt
