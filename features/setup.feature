@@ -20,5 +20,5 @@ Feature: Install Android SDK on Debian/CentOS Linux Distro with Emulator
 	Scenario:
 		When I create AVD
 		Then is should be successful
-		And I should be able to access the internet from the device
+		And I should be able to see the device from the list of devices
 

@@ -10,8 +10,11 @@ build_tools_version: 25.0.2
 
 # Option to create AVD. Please set to false in subsequent executions
 create_avd: true
-avd_name: android19
-avd_android_version: android-19
+avd_name: Lollipop
+avd_android_version: android-22
+google_api_system_image: sys-img-armeabi-v7a-google_apis-22
+abi_version: 
+
 
 # Note that there's currently only support for armeabi-v7a
 # So make sure the avd version has an ABI for armeabi-v7a

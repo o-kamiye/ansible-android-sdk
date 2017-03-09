@@ -42,6 +42,13 @@ end
 
 # Configure AVD
 When(/^I create AVD$/) do
-  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/avd.yml -vvv"
+  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/avd.yml --tags 'avd_configure' -vvv"
   output, error, @status = Open3.capture3 "#{command}"
+end
+
+When(/^I should be able to see the device from the list of devices$/) do
+  command = "ansible-playbook -i #{HOSTS_INVENTORY_FILE} --private-key=#{PRIVATE_KEY} playbooks/avd.yml --tags 'avd_verify' -vvv"
+  output, error, status = Open3.capture3 "#{command}"
+
+  expect(status.success?).to eq(true)
 end

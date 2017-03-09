@@ -1,6 +1,6 @@
 ---
-- name: Install system images
-  command: bash -c "echo y | ./sdkmanager 'system-images;{{ avd_android_version }};default;armeabi-v7a'" chdir={{ android_home_directory }}/tools/bin
+- name: Update SDK with Google API ABI
+  command: bash -c "echo y | ./android update sdk -u -a -t {{ avd_android_version }},{{ google_api_system_image }}"
   when: create_avd
   tags:
     - avd_configure
@@ -10,4 +10,9 @@
   when: create_avd
   tags:
     - avd_configure
+
+- name: Check that created avd is shown in list of devices
+  command: bash -c "./android list avd | grep {{ avd_name }}"
+  tags:
+    - avd_verify
 
