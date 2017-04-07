@@ -1,0 +1,28 @@
+# Debian dependency repositories
+
+- name: Add webupd8 ppa
+  apt_repository: repo='ppa:webupd8team/java'
+  tags:
+    - common
+
+- name: Update apt cache
+  apt: update_cache=yes
+  tags:
+    - common
+
+- name: Upgrade OS
+  apt: upgrade=dist force=yes
+  tags:
+    - common
+
+- name: Check if python is installed
+  command: bash -c "python --version 2>&1 | awk '{print $2}'"
+  register: python_version
+  tags:
+    - common
+
+- name: Install minimum required python version if not present
+  apt: name=python2.7 state=present
+  when: python_version.stdout < '2.6.5'
+  tags:
+    - common

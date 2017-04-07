@@ -1,30 +1,11 @@
 ---
-- name: Add webupd8 ppa
-  apt_repository: repo='ppa:webupd8team/java'
-  tags:
-    - common
+# Fetch appropriate dependencies
 
-- name: Update apt cache
-  apt: update_cache=yes
-  tags:
-    - common
+- include: debian_repo.yml
+  when: ansible_os_family == "Debian"
 
-- name: Upgrade OS
-  apt: upgrade=dist force=yes
-  tags:
-    - common
-
-- name: Check if python is installed
-  command: bash -c "python --version 2>&1 | awk '{print $2}'"
-  register: python_version
-  tags:
-    - common
-
-- name: Install minimum required python version if not present
-  apt: name=python2.7 state=present
-  when: python_version.stdout < '2.6.5'
-  tags:
-    - common
+- include: redhat_repo.yml
+  when: ansible_os_family == "RedHat"
 
 - name: Check if pip is installed
   command: bash -c "pip --version | grep pip"
@@ -54,35 +35,17 @@
   tags:
     - common
 
-- debug: var=pexpect_version
-  tags:
-    - common
-
 - name: Install Pexpect
   pip: name=pexpect state=latest
   when: pexpect_version.stdout < '3.3'
   tags:
     - common
 
-- name: Install Dependencies
-  apt: name="{{ item }}" state=latest
-  with_items:
-    - git
-    - lib32stdc++6
-    - lib32z1
-    - unzip
-  tags:
-    - common
+# Install appropriate dependencies
 
-- name: Auto accept oracle jdk license
-  command: bash -c "echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections"
-  tags:
-    - common
+- include: debian_dependencies.yml
+  when: ansible_os_family == "Debian"
 
-- name: Install java8
-  command: bash -c "apt-get install -y oracle-java8-installer ca-certificates"
-  tags:
-    - common
-
-
+- include: redhat_dependencies.yml
+  when: ansible_os_family == "RedHat"
   

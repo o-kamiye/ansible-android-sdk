@@ -1,0 +1,16 @@
+# Install redhat dependencies
+
+- name: Install Dependencies
+  yum: name="{{ item }}" state=present
+  with_items:
+    - git
+    - libstdc++*
+    - zlib*
+    - unzip
+  tags:
+    - common
+
+- name: Install Java 8 rpm
+  yum: name="{{ java8_rpm }}" state=present
+  tags:
+    - common
