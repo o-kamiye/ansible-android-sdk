@@ -45,5 +45,5 @@ You can configure the remaining variables using your preferred version for all t
 
 ## Running
 
-After the setup is complete, run ``` $ cucumber features/setup.feature ``` from the project root directory and that it!
+After the setup is complete, run ` $ cucumber features/setup.feature ` from the project root directory and that's it!
 
