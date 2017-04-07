@@ -78,6 +78,5 @@
   command: bash -c "{{ item }}"
   with_items:
     - cat /etc/profile.d/android.sh | grep ANDROID_HOME
-    - shutdown -r now
   tags:
     - sdk_configure
