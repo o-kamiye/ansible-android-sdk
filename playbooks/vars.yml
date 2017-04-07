@@ -1,6 +1,9 @@
 # Configurable variables for all playbooks
-hosts: vagrant
-user: vagrant
+hosts: labserver
+user: kamiye
+
+java8_rpm: jdk-8u121-linux-x64.rpm
+java8_rpm_download_url: http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/{{ java8_rpm }}
 
 # Configuration for Android SDK
 sdk_tools_version: 25.2.3

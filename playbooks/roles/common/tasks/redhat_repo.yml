@@ -1,0 +1,23 @@
+# RedHat dependency repositories
+
+- name: Download java for CentOS
+  command: bash -c "wget --header 'Cookie:oraclelicense=accept-securebackup-cookie' {{ java8_rpm_download_url }}"
+  tags:
+    - common
+
+- name: Upgrade OS
+  yum: name=* update_cache=yes
+  tags:
+    - common
+
+- name: Check if python is installed
+  command: bash -c "python --version 2>&1 | awk '{print $2}'"
+  register: python_version
+  tags:
+    - common
+
+- name: Install minimum required python version if not present
+  yum: name=python2.7 state=present
+  when: python_version.stdout < '2.6.5'
+  tags:
+    - common
